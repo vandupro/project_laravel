@@ -14,6 +14,7 @@
     <link href="{{asset('frontend/css/animate.css')}}" rel="stylesheet">
     <link href="{{asset('frontend/css/main.css')}}" rel="stylesheet">
     <link href="{{asset('frontend/css/responsive.css')}}" rel="stylesheet">
+    <link href="{{asset('frontend/css/sweetalert.css')}}" rel="stylesheet">
     <!--[if lt IE 9]>
     <script src="{{asset('frontend/js/html5shiv.js')}}"></script>
     <script src="{{asset('frontend/js/respond.min.js')}}"></script>
@@ -23,6 +24,7 @@
     <link rel="apple-touch-icon-precomposed" sizes="114x114" href="images/ico/apple-touch-icon-114-precomposed.png">
     <link rel="apple-touch-icon-precomposed" sizes="72x72" href="images/ico/apple-touch-icon-72-precomposed.png">
     <link rel="apple-touch-icon-precomposed" href="images/ico/apple-touch-icon-57-precomposed.png">
+    @yield('slide-css')
 </head>
 <!--/head-->
 
@@ -66,7 +68,7 @@
                             <a href="{{route('trang-chu')}}"><img src="{{asset('frontend/images/logo.png')}}"
                                     alt="" /></a>
                         </div>
-                        <div class="btn-group pull-right">
+                        <!-- <div class="btn-group pull-right">
                             <div class="btn-group">
                                 <button type="button" class="btn btn-default dropdown-toggle usa"
                                     data-toggle="dropdown">
@@ -90,19 +92,20 @@
                                     <li><a href="#">Pound</a></li>
                                 </ul>
                             </div>
-                        </div>
+                        </div> -->
                     </div>
                     <div class="col-sm-8">
                         <div class="shop-menu pull-right">
                             <ul class="nav navbar-nav">
-                                <li><a href="{{route('login')}}"><i class="fa fa-user"></i>Tài khoản</a></li>
-                                <li><a href="#"><i class="fa fa-star"></i>Yêu thích</a></li>
+                                <li><a href="{{route('history')}}"><i class="fa fa-star"></i>Lịch sử</a></li>
                                 <li><a href="{{route('checkout')}}"><i class="fa fa-crosshairs"></i>Thanh toán</a></li>
-                                <li><a href="{{route('show-cart')}}"><i class="fa fa-shopping-cart"></i>Giỏ hàng</a></li>
+                                <li><a href="{{route('show-cart')}}"><i class="fa fa-shopping-cart"></i>Giỏ hàng</a>
+                                </li>
                                 @if(!Session::has('customer'))
                                 <li><a href="{{route('login')}}"><i class="fa fa-lock"></i>Đăng nhập</a></li>
                                 @else
-                                <li><a onclick="return confirm('Bạn muốn đăng xuất?')" href="{{route('logout')}}"><i class="fa fa-lock"></i>Đăng xuất</a></li>
+                                <li><a onclick="return confirm('Bạn muốn đăng xuất?')" href="{{route('logout')}}"><i
+                                            class="fa fa-lock"></i>Đăng xuất</a></li>
                                 @endif
                             </ul>
                         </div>
@@ -128,27 +131,24 @@
                         </div>
                         <div class="mainmenu pull-left">
                             <ul class="nav navbar-nav collapse navbar-collapse">
-                                <li><a href="{{route('trang-chu')}}" class="active">Trang chủ</a></li>
-                                <li class="dropdown"><a href="#">Sản phẩm<i class="fa fa-angle-down"></i></a>
-                                    <ul role="menu" class="sub-menu">
-                                        <li><a href="shop.html">Products</a></li>
-
-                                    </ul>
+                                <li><a href="{{route('trang-chu')}}" class="@yield('main-active')">Trang chủ</a></li>
+                                <li><a href="{{route('san-pham')}}" class="@yield('product-active')">Sản phẩm</a>
                                 </li>
-                                <li class="dropdown"><a href="#">Tin tức</i></a>
-                                    <!-- <ul role="menu" class="sub-menu">
+                                <!-- <li class="dropdown"><a href="#">Tin tức</i></a>
+                                    <ul role="menu" class="sub-menu">
                                         <li><a href="blog.html">Blog List</a></li>
                                         <li><a href="blog-single.html">Blog Single</a></li>
-                                    </ul> -->
+                                    </ul>
                                 </li>
-                                <li><a href="contact-us.html">Liên hệ</a></li>
+                                <li><a href="contact-us.html">Liên hệ</a></li> -->
                             </ul>
                         </div>
                     </div>
                     <div class="col-sm-5">
                         <div class="search_box pull-right" style="width: 100%">
                             <form style="display:flex" action="{{route('tim-kiem')}}" method="get">
-                                <input @if(@isset($keyword)) value="{{$keyword}}" @endif style="width:80%" name="keyword" required  type="text" placeholder="Search" />
+                                <input @if(@isset($keyword)) value="{{$keyword}}" @endif style="width:80%"
+                                    name="keyword" required type="text" placeholder="Search" />
                                 <button style="width:18%" type="submit" class="btn btn-success">Tìm kiếm</button>
                             </form>
                         </div>
@@ -350,6 +350,44 @@
     <script src="{{asset('frontend/js/price-range.js')}}"></script>
     <script src="{{asset('frontend/js/jquery.prettyPhoto.js')}}"></script>
     <script src="{{asset('frontend/js/main.js')}}"></script>
+    <script src="{{asset('frontend/js/sweetalert.min.js')}}"></script>
+    <script>
+    $(document).ready(function() {
+        $('.add-to-cart').click(function() {
+            var id = $(this).data('id');
+            var cart_product_id = $('.cart_product_id_' + id).val();
+            var _token = $('input[name="_token"]').val();
+            $.ajax({
+                url: "{{route('add-cart-ajax')}}",
+                method: 'POST',
+                data: {
+                    cart_product_id: cart_product_id,
+                    _token: _token
+                },
+                success: function(data) {
+                    swal({
+                        title: "Tuyệt vời!",
+                        text: "Bạn thêm giỏ hàng thành công!",
+                        icon: "success",
+                    });
+                },
+                error: function(error) {
+                    console.log(error)
+                }
+            });
+        })
+    })
+    </script>
+    @yield('javascript')
+    <script>
+    $(document).ready(function() {
+        //alert('khk');
+        // $('.set-acive').click(function() {
+        //     alert('hfkdh');
+        //     $(this).addClass('active');
+        // })
+    })
+    </script>
 </body>
 
 </html>

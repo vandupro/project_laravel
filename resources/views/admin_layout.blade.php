@@ -143,6 +143,25 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
                         </li>
                         @hasanyrole('Sale|Admin')
                         <li class="sub-menu">
+                            <a class="@yield('ship-active')" href="javascript:;">
+                                <i class="fa fa-book"></i>
+                                <span>Quản lý phí vận chuyển</span>
+                            </a>
+                            <ul class="sub">
+                                <li><a href="{{route('admin.ships.create')}}">Thêm mới</a></li>
+                            </ul>
+                        </li>
+                        <li class="sub-menu">
+                            <a class="@yield('coupon-active')" href="javascript:;">
+                                <i class="fa fa-book"></i>
+                                <span>Quản lý mã giảm giá</span>
+                            </a>
+                            <ul class="sub">
+                                <li><a href="{{route('admin.coupons.create')}}">Thêm mới</a></li>
+                                <li><a href="{{route('admin.coupons.index')}}">Danh sách</a></li>
+                            </ul>
+                        </li>
+                        <li class="sub-menu">
                             <a class="@yield('order-active')" href="javascript:;">
                                 <i class="fa fa-book"></i>
                                 <span>Quản lý đơn hàng</span>
@@ -237,6 +256,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
     </script>
     <!-- ckeditor -->
     <script src="{{asset('backend/ckeditor/ckeditor.js')}}"></script>
+    <script src="{{asset('backend/ckfinder/ckfinder.js')}}"></script>
     <!-- //calendar -->
     <!-- jquery validation -->
     <!-- <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script> -->

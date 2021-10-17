@@ -9,7 +9,6 @@ class Order extends Model
 {
     use HasFactory;
     protected $table = 'orders';
-
     public function customer(){
         return $this->belongsTo(Customer::class, 'customer_id');
     }
@@ -19,8 +18,16 @@ class Order extends Model
     public function payment(){
         return $this->belongsTo(Payment::class, 'payment_id');
     }
+    public function coupon(){
+        return $this->belongsTo(Coupon::class, 'coupon_id')->withTrashed();
+    }
+    public function fee_ship(){
+        return $this->belongsTo(FeeShip::class, 'fee_ship_id');
+    }
+
     public function products(){
         return $this->belongsToMany(Product::class, 'order_details', 'order_id', 'product_id')
-                    ->withPivot('product_quantity', 'product_price');;
+                    ->withPivot('product_quantity', 'product_price', 'id')
+                    ->withTrashed();
     }
 }

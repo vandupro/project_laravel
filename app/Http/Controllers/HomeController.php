@@ -14,8 +14,11 @@ class HomeController extends Controller
     public $branches;
     public function __construct()
     {
-        $this->cates = Category::with('products')->where('status', 1)->orderBy('id', 'desc')->get();
-        $this->branches = Branch::with('products')->where('status', 1)->orderBy('id', 'desc')->get();
+        $this->cates = Category::has('products', '>', 0)->with('products')
+                                                ->where('status', 1)
+                                                ->orderBy('id', 'desc')
+                                                ->get();
+        $this->branches = Branch::has('products', '>', 0)->with('products')->where('status', 1)->orderBy('id', 'desc')->get();
     }
     public function index(){
         $cates = $this->cates;
@@ -30,7 +33,7 @@ class HomeController extends Controller
         $branches = $this->branches;
         $categoryName = Category::find($id);
 
-        $products = Product::with('category')->where('cate_id', $id)->orderBy('id', 'desc')->paginate(6);
+        $products = Product::with('category')->where('cate_id', $id)->where('status' , 1)->orderBy('id', 'desc')->paginate(6);
         return view('pages.categories.show_product', compact('cates', 'branches', 'products', 'categoryName'));
     }
 
@@ -65,6 +68,17 @@ class HomeController extends Controller
         $keyword = $request->keyword;
         return view('pages.products.search', compact('products', 'cates', 'branches', 'keyword'));
 
+    }
+
+    public function getAllProduct(Request $request){
+        $pagesize = 9;
+        $searchData = $request->except('page');
+        $products = DB::table('products')
+                    ->paginate($pagesize)
+                    ->appends($searchData);
+        $cates = $this->cates;
+        $branches = $this->branches;
+        return view('pages.products.all_products', compact('products', 'cates', 'branches'));
     }
 
     

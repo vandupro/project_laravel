@@ -15,9 +15,9 @@
                         @csrf
                         <input type="hidden" name="id" value="{{$branch->id}}">
                         <div class="form-group">
-                            <label for="">Tên thương hiệu</label>
+                            <label for="">Tên thương hiệu sản phẩm</label>
                             <input value="{{$branch->name}}" type="text" name="name" class="form-control"
-                                id="exampleInputEmail1" placeholder="Điền tên thương hiệu">
+                                id="exampleInputEmail1" placeholder="Điền tên thương hiệu sản phẩm">
                             @error('name')
                             <span style="color:red">{{$message}}</span>
                             @enderror
@@ -25,7 +25,7 @@
                         <div class="form-group">
                             <label for="">Mô tả</label>
                             <textarea id="ck8" placeholder="Điền mô tả" style="resize:none" class="form-control"
-                                placeholder="Mô tả thương hiệu" name="desc" id="" cols="30"
+                                placeholder="Mô tả thương hiệu sản phẩm" name="desc" id="" cols="30"
                                 rows="8">{{$branch->desc}}</textarea>
                         </div>
                         <div class="form-group">
@@ -44,20 +44,24 @@
         </section>
     </div>
 </div>
+
 @endsection
 @section('javascript')
 <script>
-CKEDITOR.replace('ck8');
+var editor = CKEDITOR.replace( 'ck8' , {
+    filebrowserBrowseUrl: "{{asset('backend/ckfinder/ckfinder.html')}}",
+    filebrowserImageBrowseUrl: "{{asset('backend/ckfinder/ckfinder.html?Type=Images')}}",
+});
 </script>
 <script>
 $(document).ready(function() {
-    if ($("#branchFormEdit").length > 0) {
-        $("#branchFormEdit").validate({
+    if ($("#orderFormEdit").length > 0) {
+        $("#orderFormEdit").validate({
             rules: {
                 name: {
                     required: true,
-                    remote:{
-                        url:"{{route('admin.branches.check-name')}}",
+                    remote: {
+                        url: "{{route('admin.branches.check-name')}}",
                         type: "get",
                     }
                 },

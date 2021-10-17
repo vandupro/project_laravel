@@ -18,10 +18,10 @@
                         @csrf
                         <input type="email" placeholder="Địa chỉ mail" name="customer_email" require />
                         <input type="password" placeholder="Mật khẩu" name="customer_password" require />
-                        <span>
+                        <!-- <span>
                             <input type="checkbox" class="checkbox">
                             Ghi nhớ đăng nhập
-                        </span>
+                        </span> -->
                         <button type="submit" class="btn btn-default">Đăng nhập</button>
                     </form>
                 </div>

@@ -11,19 +11,21 @@
         </div>
         <!--/breadcrums-->
         <div>Chọn hình thức thanh toán:</div>
+        
         <form style="margin: 50px 0 200px 0; padding: 50px; border: 1px solid #cccc; border-radius: 10px" 
             action="{{route('order-place')}}" method="post">
             @csrf
             <div style="margin-top: 20px; margin-bottom: 20px" class="payment-options">
+                @foreach($payments as $p)
                 <span>
-                    <label><input name="method" value="1" style="margin-right: 10px" type="radio">Thẻ ATM</label>
+                    <label><input name="method" value="{{$p->id}}" style="margin-right: 10px" type="radio">{{$p->method}}</label>
                 </span>
-                <span>
-                    <label><input name="method" value="2" checked style="margin-right: 10px" type="radio">Tiền mặt</label>
-                </span>
-                <span>
-                    <label><input name="method" value="3" style="margin-right: 10px" type="radio">Paypal</label>
-                </span>
+                @endforeach
+                @error('method')
+                    <div>
+                        <span style="color:red">{{$message}}</span>
+                    </div>
+                @enderror
             </div>
             <button type="submit" class="btn btn-success">Đặt hàng</button>
         </form>

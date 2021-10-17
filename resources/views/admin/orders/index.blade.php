@@ -34,10 +34,10 @@
                             STT
                         </th>
                         <th>Khách hàng</th>
-                        <th>Tổng tiền</th>
+                        <th>Ngày đặt</th>
                         <th>Tình trạng</th>
                         <th>Chi tiết</th>
-                        <th style="width:30px;"></th>
+                        <th style="width:30px;">Hành động</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -45,7 +45,7 @@
                     <tr>
                         <td>{{(($orders->currentPage()-1)*$pagesize) + $loop->iteration}}</td>
                         <td>{{$c->name}}</td>
-                        <td><span class="text-ellipsis">{{number_format($c->total, 0, ',', ',')}}</span></td>
+                        <td>{{date('d-m-Y h:i:s A', strtotime($c->created_at))}}</td>
                         <td><span class="text-ellipsis">
                             @if($c->status==1)
                                 Đang xử lý
@@ -53,6 +53,8 @@
                                 Đang giao hàng
                             @elseif($c->status==3)
                                 Đã thanh toán
+                            @elseif($c->status==4)
+                                Hủy đơn
                             @endif
                         </span></td>
                         <td><span class="text-ellipsis">
@@ -60,7 +62,6 @@
                             </span></td>
                         <td style="width: 15%">
                             @hasanyrole('Admin|Sale')
-                            <a class="btn btn-warning" href="{{route('admin.orders.edit', ['id'=>$c->id])}}">Sửa</a>
                             <a onclick="return confirm('Bạn có chắc muốn xóa không?')" 
                             class="btn btn-danger" href="{{route('admin.orders.delete', ['id'=>$c->id])}}">Xóa</a>
                             @endhasanyrole

@@ -153,8 +153,15 @@ function removeImg(el) {
 </script>
 <!-- ckeditor -->
 <script>
-CKEDITOR.replace('ck1');
-CKEDITOR.replace('ck2');
+var editor = CKEDITOR.replace( 'ck1' , {
+    filebrowserBrowseUrl: "{{asset('backend/ckfinder/ckfinder.html')}}",
+    filebrowserImageBrowseUrl: "{{asset('backend/ckfinder/ckfinder.html?Type=Images')}}",
+});
+var editor = CKEDITOR.replace( 'ck2', {
+    filebrowserBrowseUrl: "{{asset('backend/ckfinder/ckfinder.html')}}",
+    filebrowserImageBrowseUrl: "{{asset('backend/ckfinder/ckfinder.html?Type=Images')}}",
+} );
+//CKFinder.setupCKEditor( editor );
 </script>
 <!-- jquery validation form -->
 <script>

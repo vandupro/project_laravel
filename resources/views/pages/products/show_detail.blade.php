@@ -7,7 +7,7 @@
         @foreach($cates as $cate)
         <div class="panel panel-default">
             <div class="panel-heading">
-                <h4 class="panel-title"><a href="{{route('danh-muc', ['id'=>$cate->id])}}">{{$cate->name}}</a></h4>
+                <h4 class="panel-title"><a class="set-acive" href="{{route('danh-muc', ['id'=>$cate->id])}}">{{$cate->name}}</a></h4>
             </div>
         </div>
         @endforeach
@@ -34,38 +34,31 @@
     <!--product-details-->
     <div class="col-sm-5">
         <div class="view-product">
-            <img src="{{'/storage/' . $product->image}}" alt="" />
-            <h3>ZOOM</h3>
-        </div>
-        <div id="similar-product" class="carousel slide" data-ride="carousel">
-
-            <!-- Wrapper for slides -->
-            <div class="carousel-inner">
-                <div class="item active">
-                    <a href=""><img src="{{asset('frontend/images/similar1.jpg')}}" alt=""></a>
-                    <a href=""><img src="{{asset('frontend/images/similar2.jpg')}}" alt=""></a>
-                    <a href=""><img src="{{asset('frontend/images/similar3.jpg')}}" alt=""></a>
-                </div>
-                <div class="item">
-                    <a href=""><img src="{{asset('frontend/images/similar1.jpg')}}" alt=""></a>
-                    <a href=""><img src="{{asset('frontend/images/similar2.jpg')}}" alt=""></a>
-                    <a href=""><img src="{{asset('frontend/images/similar3.jpg')}}" alt=""></a>
-                </div>
-                <div class="item">
-                    <a href=""><img src="{{asset('frontend/images/similar1.jpg')}}" alt=""></a>
-                    <a href=""><img src="{{asset('frontend/images/similar2.jpg')}}" alt=""></a>
-                    <a href=""><img src="{{asset('frontend/images/similar3.jpg')}}" alt=""></a>
-                </div>
-
+            <div class="mySlides">
+                <img src="{{'/storage/'. $product->image}}" style="width:326px">
             </div>
-
-            <!-- Controls -->
-            <a class="left item-control" href="#similar-product" data-slide="prev">
-                <i class="fa fa-angle-left"></i>
-            </a>
-            <a class="right item-control" href="#similar-product" data-slide="next">
-                <i class="fa fa-angle-right"></i>
-            </a>
+            @foreach($product->galleries as $gal)
+            <div class="mySlides">
+                <div class="numbertext">1 / 6</div>
+                <img src="{{'/storage/'. $gal->image}}" style="width:326px">
+            </div>
+            @endforeach
+            <!-- Next and previous buttons -->
+            <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
+            <a class="next" onclick="plusSlides(1)">&#10095;</a>
+        </div>
+        <div style="margin-top:15px">
+            <div class="row">
+                <div class="column">
+                    <img class="demo cursor" src="{{'/storage/'. $product->image}}" style="width:100%" onclick="currentSlide(1)">
+                </div>
+                @foreach($product->galleries as $key=>$value)
+                <div class="column">
+                    <img class="demo cursor" src="{{'/storage/'. $value->image}}" style="width:100%"
+                        onclick="currentSlide({{$key+2}})" >
+                </div>
+                @endforeach
+            </div>
         </div>
 
     </div>
@@ -113,11 +106,11 @@
     </div>
     <div class="tab-content">
         <div class="tab-pane fade active in" id="details">
-            <p>{{$product->desc}}</p>
+            <p>{!!$product->desc!!}</p>
         </div>
 
         <div class="tab-pane fade" id="companyprofile">
-            <p>{{$product->content}}</p>
+            <p>{!!$product->content!!}</p>
         </div>
         <div class="tab-pane fade " id="reviews">
             <div class="col-sm-12">
@@ -156,11 +149,18 @@
                 <div class="product-image-wrapper">
                     <div class="single-products">
                         <div class="productinfo text-center">
-                            <img src="{{'/storage/' . $p->image}}" alt="" />
-                            <h2>{{number_format($p->price) . ' ' . 'VND'}}</h2>
-                            <p>{{$p->name}}</p>
-                            <a href="#" class="btn btn-default add-to-cart">
-                                <i class="fa fa-shopping-cart"></i>Thêm giỏ hàng</a>
+                            <form>
+                                @csrf
+                                <input type="hidden" value="{{$p->id}}" class="cart_product_id_{{$p->id}}">
+                                <a href="{{route('chi-tiet', ['id'=>$p->id])}}">
+                                    <img style="height: 256px;" src="{{'/storage/'.$p->image}}" alt="" />
+                                </a>
+                                <h2>{{number_format($p->price) . ' ' . 'VND'}}</h2>
+                                <p>{{$p->name}}</p>
+                                <button type="button" class="btn btn-default add-to-cart" data-id="{{$p->id}}"
+                                    name="add-to-cart">Thêm giỏ
+                                    hàng</button>
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -168,10 +168,140 @@
         </a>
         @endforeach
     </div>
+    @if(count($product_relates) > 6)
     <div style="text-align: center; margin-bottom: 20px;">
         <a href="{{route('danh-muc', ['id'=>$product->category->id])}}" class="btn btn-info">Xem thêm</a>
     </div>
+    @endif
 </div>
 <!--/recommended_items-->
 @endsection
 <!--/product-details-->
+@section('slide-css')
+<style>
+* {
+    box-sizing: border-box;
+}
+
+/* Position the image container (needed to position the left and right arrows) */
+.container {
+    position: relative;
+}
+
+/* Hide the images by default */
+.mySlides {
+    display: none;
+}
+
+/* Add a pointer when hovering over the thumbnail images */
+.cursor {
+    cursor: pointer;
+}
+
+/* Next & previous buttons */
+.prev,
+.next {
+    cursor: pointer;
+    position: absolute;
+    top: 40%;
+    width: auto;
+    padding: 16px;
+    margin-top: -50px;
+    color: white;
+    font-weight: bold;
+    font-size: 20px;
+    border-radius: 0 3px 3px 0;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+/* Position the "next button" to the right */
+.next {
+    right: 0;
+    border-radius: 3px 0 0 3px;
+}
+
+/* On hover, add a black background color with a little bit see-through */
+.prev:hover,
+.next:hover {
+    background-color: rgba(0, 0, 0, 0.8);
+}
+
+/* Number text (1/3 etc) */
+.numbertext {
+    color: #f2f2f2;
+    font-size: 12px;
+    padding: 8px 12px;
+    position: absolute;
+    top: 0;
+}
+
+/* Container for image text */
+.caption-container {
+    text-align: center;
+    background-color: #222;
+    padding: 2px 16px;
+    color: white;
+}
+
+.row:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+/* Six columns side by side */
+.column {
+    float: left;
+    width: 16.66%;
+}
+
+/* Add a transparency effect for thumnbail images */
+.demo {
+    opacity: 0.6;
+}
+
+.active,
+.demo:hover {
+    opacity: 1;
+}
+</style>
+@endsection
+@section('javascript')
+<script>
+var slideIndex = 1;
+showSlides(slideIndex);
+
+// Next/previous controls
+function plusSlides(n) {
+    showSlides(slideIndex += n);
+}
+
+// Thumbnail image controls
+function currentSlide(n) {
+    showSlides(slideIndex = n);
+}
+
+function showSlides(n) {
+    var i;
+    var slides = document.getElementsByClassName("mySlides");
+    var dots = document.getElementsByClassName("demo");
+    var captionText = document.getElementById("caption");
+    if (n > slides.length) {
+        slideIndex = 1
+    }
+    if (n < 1) {
+        slideIndex = slides.length
+    }
+    for (i = 0; i < slides.length; i++) {
+        slides[i].style.display = "none";
+    }
+    for (i = 0; i < dots.length; i++) {
+        dots[i].className = dots[i].className.replace(" active", "");
+    }
+    slides[slideIndex - 1].style.display = "block";
+    dots[slideIndex - 1].className += " active";
+    // captionText.innerHTML = dots[slideIndex - 1].alt;
+}
+</script>
+@endsection

@@ -48,7 +48,10 @@
 @endsection
 @section('javascript')
 <script>
-CKEDITOR.replace('ck6');
+var editor = CKEDITOR.replace( 'ck6' , {
+    filebrowserBrowseUrl: "{{asset('backend/ckfinder/ckfinder.html')}}",
+    filebrowserImageBrowseUrl: "{{asset('backend/ckfinder/ckfinder.html?Type=Images')}}",
+});
 </script>
 <script>
 $(document).ready(function() {

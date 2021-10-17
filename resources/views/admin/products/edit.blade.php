@@ -95,6 +95,11 @@
                             @endphp
                             @endforeach
                         </div>
+                        <div>
+                            @error('galleries')
+                                <span style="color:red">{{$message}}</span>
+                            @enderror
+                        </div>
                     </div>
                     <div style="margin: 20px 0">
                         <button class="btn btn-success add-img" type="button">Thêm ảnh liên quan</button>
@@ -134,8 +139,14 @@ function previewFile(input) {
 </script>
 <!-- ckeditor -->
 <script>
-CKEDITOR.replace('ck3');
-CKEDITOR.replace('ck4');
+var editor = CKEDITOR.replace( 'ck3' , {
+    filebrowserBrowseUrl: "{{asset('backend/ckfinder/ckfinder.html')}}",
+    filebrowserImageBrowseUrl: "{{asset('backend/ckfinder/ckfinder.html?Type=Images')}}",
+});
+var editor = CKEDITOR.replace( 'ck4', {
+    filebrowserBrowseUrl: "{{asset('backend/ckfinder/ckfinder.html')}}",
+    filebrowserImageBrowseUrl: "{{asset('backend/ckfinder/ckfinder.html?Type=Images')}}",
+} );
 </script>
 <!-- upload multiple related images -->
 <script>

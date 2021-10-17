@@ -51,8 +51,8 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
                 @csrf
                 <input value="{{old('email')}}" type="email" class="ggg" name="email" placeholder="Điền email" required="">
                 <input type="password" class="ggg" name="password" placeholder="Điền password" required="">
-                <span><input type="checkbox" />Nhớ đăng nhập</span>
-                <h6><a href="#">Quên mật khẩu?</a></h6>
+                <!-- <span><input type="checkbox" />Nhớ đăng nhập</span>
+                <h6><a href="#">Quên mật khẩu?</a></h6> -->
                 <div class="clearfix"></div>
                 <input type="submit" value="Đăng nhập" name="login">
 
