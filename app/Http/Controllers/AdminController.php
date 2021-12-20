@@ -167,7 +167,7 @@ class AdminController extends Controller
             ]
         );
         if(Auth::attempt(['email' => $request->email, 'password' => $request->password])
-            || Auth::attempt(['phone_number' => $request->email, 'password' => $request->password])){
+            || Auth::attempt(['phone' => $request->email, 'password' => $request->password])){
             
             return redirect(route('admin.dashboard'));
         }
